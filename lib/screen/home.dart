@@ -1,11 +1,13 @@
+import 'package:coba_flutter/screen/contohMvp/presenter/MvpPresenter.dart';
 import 'package:coba_flutter/screen/recycleView/recycleViewScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:coba_flutter/screen/contohMvp/view/MvpScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen>
@@ -20,6 +22,10 @@ class _HomeScreenState extends State<HomeScreen>
       case 0:
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const RecycleView()));
+        break;
+      case 1:
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const MvpPage()));
         break;
     }
   }
