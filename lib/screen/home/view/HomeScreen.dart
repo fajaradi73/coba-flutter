@@ -170,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen>
               },
               child: Container(
                 decoration: BoxDecoration(
-                    color: Colors.purpleAccent,
+                    color: Colors.purpleAccent.shade400,
                     borderRadius: BorderRadius.circular(10)),
                 child: Column(children: [
                   Container(
@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen>
                         borderRadius: BorderRadius.circular(10)),
                   ),
                   Text(
-                    presenter.getMenu()[index],
+                    presenter.getMenu()[index],style: const TextStyle(color: Colors.white),
                   )
                 ]),
               ),

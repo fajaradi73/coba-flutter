@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapsScreen extends StatefulWidget {
   const MapsScreen({Key? key}) : super(key: key);
@@ -13,7 +14,12 @@ class MapsScreen extends StatefulWidget {
 class _MapsScreenState extends State<MapsScreen> {
   String location = 'Null, Press Button';
   String address = 'search';
-  late Position position;
+  Position? position;
+  late GoogleMapController mapController;
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
 
   @override
   void initState() {
@@ -21,10 +27,10 @@ class _MapsScreenState extends State<MapsScreen> {
     asyncMethod();
   }
 
-  void asyncMethod() async{
+  void asyncMethod() async {
     position = await _getGeoLocationPosition();
-    location =
-    'Lat: ${position.latitude} , Long: ${position.longitude}';
+    location = 'Lat: ${position?.latitude} , Long: ${position?.longitude}';
+    if (position != null) getAddressFromLatLong(position!);
     setState(() {});
   }
 
@@ -81,41 +87,27 @@ class _MapsScreenState extends State<MapsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Coordinates Points',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              location,
-              style: const TextStyle(color: Colors.black, fontSize: 16),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(
-              'ADDRESS',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(address),
-            ElevatedButton(
-                onPressed: () async {
-                  getAddressFromLatLong(position);
-                },
-                child: const Text('Get Location'))
-          ],
-        ),
+    var googleMap = GoogleMap(
+      onMapCreated: _onMapCreated,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(position?.latitude ?? 0, position?.longitude ?? 0),
+        zoom: 15.0,
       ),
+      myLocationEnabled: true,
+      mapType: MapType.normal,
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Maps'),
+      ),
+      body: (position != null)
+          ? googleMap
+          : Container(
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator(
+                color: Colors.purpleAccent,
+              )),
     );
   }
 }

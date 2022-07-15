@@ -158,7 +158,6 @@ class _MvpPageState extends State<MvpPage> implements MvpView {
     return Scaffold(
         appBar: AppBar(
           title: const Text('MVP'),
-          backgroundColor: Colors.pinkAccent.shade400,
         ),
         backgroundColor: Colors.white,
         body: ListView(
@@ -181,7 +180,7 @@ class _MvpPageState extends State<MvpPage> implements MvpView {
   RaisedButton calculateButton() {
     return RaisedButton(
       onPressed: _calculator,
-      color: Colors.pinkAccent,
+      color: Colors.purpleAccent,
       textColor: Colors.white,
       child: const Text(
         'Calculate',

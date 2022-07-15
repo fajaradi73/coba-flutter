@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Splash Screen',
       theme: ThemeData(
           colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: Colors.purpleAccent,
+            primary: Colors.purpleAccent.shade400,
             secondary: Colors.purpleAccent.shade700,
           )),
       home: const PermissionHandlerScreen(),
