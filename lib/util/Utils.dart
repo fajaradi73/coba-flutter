@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:coba_flutter/util/Constant.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 String determineBMIMessage(double value) {
@@ -48,3 +51,24 @@ void saveValue(int value) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   preferences.setInt('data', value);
 }
+
+getAddressFromLatLng(context, double lat, double lng) async {
+  String host = 'https://maps.google.com/maps/api/geocode/json';
+  final url =
+      '$host?key=AIzaSyAd0Senk1tiMssHceMI-wqvRIo83exeKYU&language=en&latlng=$lat,$lng';
+  var response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    Map data = jsonDecode(response.body);
+    String formattedAddress = data["results"][0]["formatted_address"];
+    if (kDebugMode) {
+      print("response ==== $formattedAddress");
+    }
+    return formattedAddress;
+  } else {
+    return null;
+  }
+}
+
+dynamic jsonDecode(String source,
+        {Object? Function(Object? key, Object? value)? reviver}) =>
+    json.decode(source, reviver: reviver);

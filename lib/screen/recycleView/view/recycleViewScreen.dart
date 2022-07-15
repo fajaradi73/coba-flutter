@@ -2,18 +2,16 @@
 
 import 'dart:convert';
 
-import 'package:coba_flutter/data/characterApi.dart';
-import 'package:coba_flutter/model/character.dart';
+import 'package:coba_flutter/data/api.dart';
+import 'package:coba_flutter/screen/recycleView/model/character.dart';
 import 'package:coba_flutter/util/LoadingScreen.dart';
 import 'package:flutter/material.dart';
-
-import 'RecycleViewWidget.dart';
 
 class RecycleView extends StatefulWidget {
   const RecycleView({Key? key}) : super(key: key);
 
   @override
-  _RecyleViewState createState() => _RecyleViewState();
+  State<RecycleView> createState() => _RecyleViewState();
 }
 
 class _RecyleViewState extends State<RecycleView> {
@@ -64,41 +62,43 @@ class _RecyleViewState extends State<RecycleView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: appBarTitle,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: actionIcon,
-              onPressed: () {
-                setState(() {
-                  if (actionIcon.icon == Icons.search) {
-                    actionIcon = const Icon(
-                      Icons.close,
+    var appBar = AppBar(
+        title: appBarTitle,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: actionIcon,
+            onPressed: () {
+              setState(() {
+                if (actionIcon.icon == Icons.search) {
+                  actionIcon = const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  );
+                  appBarTitle = TextField(
+                    controller: _searchQuery,
+                    style: const TextStyle(
                       color: Colors.white,
-                    );
-                    appBarTitle = TextField(
-                      controller: _searchQuery,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.search, color: Colors.white),
-                          hintText: "Search...",
-                          hintStyle: TextStyle(color: Colors.white)),
-                    );
-                    _handleSearchStart();
-                  } else {
-                    _handleSearchEnd();
-                  }
-                });
-              },
-            ),
-          ]),
+                    ),
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.search, color: Colors.white),
+                        hintText: "Search...",
+                        hintStyle: TextStyle(color: Colors.white)),
+                  );
+                  _handleSearchStart();
+                } else {
+                  _handleSearchEnd();
+                }
+              });
+            },
+          ),
+        ]);
+
+    return Scaffold(
+      appBar: appBar,
       body: (characterList.isEmpty)
           ? const LoadingScreen()
           : _isSearching
@@ -107,23 +107,37 @@ class _RecyleViewState extends State<RecycleView> {
     );
   }
 
-  RecycleViewWidget _buildList() {
-    return RecycleViewWidget(characterList: characterList);
+  recycleView(List<Character> characterList) {
+    return ListView.builder(
+        itemCount: characterList.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(characterList[index].name),
+            subtitle: Text(characterList[index].nickname),
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(characterList[index].img),
+            ),
+          );
+        });
   }
 
-  RecycleViewWidget _buildSearchList() {
+  _buildList() {
+    return recycleView(characterList);
+  }
+
+  _buildSearchList() {
     if (_searchText.isEmpty) {
-      return RecycleViewWidget(characterList: characterList);
+      return recycleView(characterList);
     } else {
-      List<Character> _searchList = [];
+      List<Character> searchList = [];
       for (int i = 0; i < characterList.length; i++) {
         Character character = characterList.elementAt(i);
         String name = character.name;
         if (name.toLowerCase().contains(_searchText.toLowerCase())) {
-          _searchList.add(character);
+          searchList.add(character);
         }
       }
-      return RecycleViewWidget(characterList: _searchList);
+      return recycleView(searchList);
     }
   }
 
