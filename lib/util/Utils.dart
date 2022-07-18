@@ -1,11 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:coba_flutter/util/Constant.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vector_math/vector_math.dart';
 
 String determineBMIMessage(double value) {
   if (value < 15.0) {
@@ -72,3 +77,32 @@ getAddressFromLatLng(context, double lat, double lng) async {
 dynamic jsonDecode(String source,
         {Object? Function(Object? key, Object? value)? reviver}) =>
     json.decode(source, reviver: reviver);
+
+Future<Uint8List> getBytesFromAsset(String path, int width) async {
+  ByteData data = await rootBundle.load(path);
+  ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+      targetWidth: width);
+  ui.FrameInfo fi = await codec.getNextFrame();
+  return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+      .buffer
+      .asUint8List();
+}
+
+double getBearing(LatLng begin, LatLng end) {
+  double lat = (begin.latitude - end.latitude).abs();
+  double lng = (begin.longitude - end.longitude).abs();
+
+  if (begin.latitude < end.latitude && begin.longitude < end.longitude) {
+    return degrees(atan(lng / lat));
+  } else if (begin.latitude >= end.latitude &&
+      begin.longitude < end.longitude) {
+    return (90 - degrees(atan(lng / lat))) + 90;
+  } else if (begin.latitude >= end.latitude &&
+      begin.longitude >= end.longitude) {
+    return degrees(atan(lng / lat)) + 180;
+  } else if (begin.latitude < end.latitude &&
+      begin.longitude >= end.longitude) {
+    return (90 - degrees(atan(lng / lat))) + 270;
+  }
+  return -1;
+}
