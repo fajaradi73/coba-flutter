@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.fajarproject.coba_flutter">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -9,7 +10,11 @@
    <application
         android:label="coba_flutter"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+       android:usesCleartextTraffic="true"
+       android:networkSecurityConfig="@xml/network_security_config"
+       android:requestLegacyExternalStorage="true"
+       tools:targetApi="n">
 
        <!-- TODO: Add your Google Maps API key here -->
        <meta-data android:name="com.google.android.geo.API_KEY"

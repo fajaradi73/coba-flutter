@@ -6,12 +6,14 @@ import 'package:geolocator/geolocator.dart';
 import '../view/HomeView.dart';
 
 class HomePresenter {
-  getAddressFromLatLong(Position position){}
+  getAddressFromLatLong(Position position) {}
+
   getGeoLocationPosition() {}
-  getMenu(){}
+
+  getMenu(isLabel) {}
 }
 
-class BasicHomePresenter implements HomePresenter{
+class BasicHomePresenter implements HomePresenter {
   HomeView view;
   HomeModel model = HomeModel();
 
@@ -59,7 +61,7 @@ class BasicHomePresenter implements HomePresenter{
     double? longitude = position.longitude;
     if (latitude != 0 && longitude != 0) {
       List<Placemark> placeMarks =
-      await placemarkFromCoordinates(latitude, longitude);
+          await placemarkFromCoordinates(latitude, longitude);
       if (kDebugMode) {
         print(placeMarks);
       }
@@ -70,7 +72,11 @@ class BasicHomePresenter implements HomePresenter{
   }
 
   @override
-  getMenu() {
-    return model.getMenu;
+  getMenu(isLabel) {
+    if (isLabel) {
+      return model.getMenu;
+    } else {
+      return model.getIcon;
+    }
   }
 }

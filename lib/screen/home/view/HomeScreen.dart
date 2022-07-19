@@ -2,7 +2,9 @@ import 'package:coba_flutter/screen/contohMvp/view/MvpScreen.dart';
 import 'package:coba_flutter/screen/home/presenter/HomePresenter.dart';
 import 'package:coba_flutter/screen/home/view/HomeView.dart';
 import 'package:coba_flutter/screen/maps/view/MapsScreen.dart';
+import 'package:coba_flutter/screen/navBar/NavBarScreen.dart';
 import 'package:coba_flutter/screen/recycleView/view/recycleViewScreen.dart';
+import 'package:coba_flutter/screen/video/VideoPlayerScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -54,6 +56,14 @@ class _HomeScreenState extends State<HomeScreen>
       case 2:
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const MapsScreen()));
+        break;
+      case 3:
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const VideoPlayerScreen()));
+        break;
+      case 4:
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const NavBarScreen()));
         break;
     }
   }
@@ -161,8 +171,8 @@ class _HomeScreenState extends State<HomeScreen>
               crossAxisCount: 3,
               mainAxisSpacing: 15,
               crossAxisSpacing: 15,
-              childAspectRatio: 2 / 2.7),
-          itemCount: presenter.getMenu().length,
+              childAspectRatio: 2 / 2.8),
+          itemCount: presenter.getMenu(true).length,
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
@@ -174,16 +184,17 @@ class _HomeScreenState extends State<HomeScreen>
                     borderRadius: BorderRadius.circular(10)),
                 child: Column(children: [
                   Container(
-                    height: 120,
-                    width: 100,
+                    height: MediaQuery.of(context).size.height / 6.5,
+                    width: MediaQuery.of(context).size.width / 4,
                     decoration: BoxDecoration(
-                        image: const DecorationImage(
-                            image: AssetImage('assets/images/ic_menu.png'),
-                            fit: BoxFit.fill),
+                        image: DecorationImage(
+                            image: AssetImage(presenter.getMenu(false)[index]),
+                            fit: BoxFit.scaleDown),
                         borderRadius: BorderRadius.circular(10)),
                   ),
                   Text(
-                    presenter.getMenu()[index],style: const TextStyle(color: Colors.white),
+                    presenter.getMenu(true)[index],
+                    style: const TextStyle(color: Colors.white),
                   )
                 ]),
               ),
