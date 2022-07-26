@@ -3,11 +3,15 @@ import 'package:coba_flutter/screen/home/presenter/HomePresenter.dart';
 import 'package:coba_flutter/screen/home/view/HomeView.dart';
 import 'package:coba_flutter/screen/maps/view/MapsScreen.dart';
 import 'package:coba_flutter/screen/navBar/NavBarScreen.dart';
+import 'package:coba_flutter/screen/openFile/OpenFileScreen.dart';
 import 'package:coba_flutter/screen/recycleView/view/recycleViewScreen.dart';
 import 'package:coba_flutter/screen/video/VideoPlayerScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:camera/camera.dart';
+
+import '../../camera/CameraPage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -64,6 +68,14 @@ class _HomeScreenState extends State<HomeScreen>
       case 4:
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const NavBarScreen()));
+        break;
+      case 5:
+        availableCameras().then((value) => Navigator.push(context,
+            MaterialPageRoute(builder: (_) => CameraPage(cameras: value))));
+        break;
+      case 6:
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const OpenFileScreen()));
         break;
     }
   }

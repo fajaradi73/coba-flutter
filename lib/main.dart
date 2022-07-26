@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'util/PermissionHandlerScreen.dart';
+
+import 'screen/widget/PermissionHandlerScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Splash Screen',
       theme: ThemeData(
+          primaryColor: Colors.purpleAccent.shade400,
           colorScheme: ColorScheme.fromSwatch().copyWith(
             primary: Colors.purpleAccent.shade400,
             secondary: Colors.purpleAccent.shade700,

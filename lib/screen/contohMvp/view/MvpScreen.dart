@@ -163,7 +163,7 @@ class _MvpPageState extends State<MvpPage> implements MvpView {
         body: ListView(
           children: <Widget>[
             Image.asset(
-              'assets/images/ic_menu.png',
+              'assets/icons/ic_menu.png',
               width: 100.0,
               height: 100.0,
             ),

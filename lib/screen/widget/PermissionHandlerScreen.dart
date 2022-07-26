@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../screen/splashScreen.dart';
+import '../splashScreen.dart';
 
 class PermissionHandlerScreen extends StatefulWidget {
   const PermissionHandlerScreen({Key? key}) : super(key: key);
 
   @override
-  _PermissionHandlerScreenState createState() =>
+  State<PermissionHandlerScreen> createState() =>
       _PermissionHandlerScreenState();
 }
 
@@ -20,17 +20,26 @@ class _PermissionHandlerScreenState extends State<PermissionHandlerScreen> {
   }
 
   permissionServiceCall() async {
-    await permissionServices().then(
-      (value) {
-        if (value[Permission.location]?.isGranted == true) {
-          /* ========= New Screen Added  ============= */
+    bool success = false;
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const SplashScreen()),
-          );
+    await permissionServices().then(
+      (value) async {
+        for (var entry in value.entries) {
+          if (await entry.key.isGranted) {
+            success = true;
+          }
         }
       },
+    );
+    if (success) {
+      moveToSplash();
+    }
+  }
+
+  moveToSplash() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const SplashScreen()),
     );
   }
 
@@ -38,26 +47,28 @@ class _PermissionHandlerScreenState extends State<PermissionHandlerScreen> {
   Future<Map<Permission, PermissionStatus>> permissionServices() async {
     // You can request multiple permissions at once.
     Map<Permission, PermissionStatus> statuses = await [
-      Permission.location,
+      Permission.location, Permission.storage,
 
       //add more permission to request here.
     ].request();
 
-    if (statuses[Permission.location]?.isPermanentlyDenied == true) {
-      await openAppSettings().then(
-        (value) async {
-          if (value) {
-            if (await Permission.location.status.isPermanentlyDenied == true &&
-                await Permission.location.status.isGranted == false) {
-              // openAppSettings();
-              permissionServiceCall(); /* opens app settings until permission is granted */
+    for (var entry in statuses.entries) {
+      if (await entry.key.isPermanentlyDenied) {
+        await openAppSettings().then(
+          (value) async {
+            if (value) {
+              if ((await entry.key.status.isPermanentlyDenied == true &&
+                  await entry.key.status.isGranted == false)) {
+                // openAppSettings();
+                permissionServiceCall(); /* opens app settings until permission is granted */
+              }
             }
-          }
-        },
-      );
-    } else {
-      if (statuses[Permission.location]?.isDenied == true) {
-        permissionServiceCall();
+          },
+        );
+      } else {
+        if (await entry.key.isDenied) {
+          permissionServiceCall();
+        }
       }
     }
 

@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:coba_flutter/data/api.dart';
 import 'package:coba_flutter/screen/recycleView/model/character.dart';
-import 'package:coba_flutter/util/LoadingScreen.dart';
+import 'package:coba_flutter/screen/widget/LoadingScreen.dart';
 import 'package:flutter/material.dart';
 
 class RecycleView extends StatefulWidget {
