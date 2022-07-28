@@ -1,5 +1,5 @@
+import 'package:coba_flutter/screen/widget/LoadingScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../splashScreen.dart';
@@ -13,6 +13,8 @@ class PermissionHandlerScreen extends StatefulWidget {
 }
 
 class _PermissionHandlerScreenState extends State<PermissionHandlerScreen> {
+  bool inApprove = true;
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +33,7 @@ class _PermissionHandlerScreenState extends State<PermissionHandlerScreen> {
         }
       },
     );
+    inApprove = success;
     if (success) {
       moveToSplash();
     }
@@ -76,45 +79,47 @@ class _PermissionHandlerScreenState extends State<PermissionHandlerScreen> {
     return statuses;
   }
 
-  // Future<bool> _onWillPop() async {
-  //   // This dialog will exit your app on saying yes
-  //   return (await showDialog(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       title: const Text('Are you sure?'),
-  //       content: const Text('Do you want to exit an App'),
-  //       actions: <Widget>[
-  //         FlatButton(
-  //           onPressed: () => Navigator.of(context).pop(false),
-  //           child: const Text('No'),
-  //         ),
-  //         FlatButton(
-  //           onPressed: () => Navigator.of(context).pop(true),
-  //           child: const Text('Yes'),
-  //         ),
-  //       ],
-  //     ),
-  //   )) ??
-  //       false;
-  // }
+  _onWillPop() async {
+    // This dialog will exit your app on saying yes
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Are you sure?'),
+            content: const Text('Do you want to exit an App'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Yes'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
 
   @override
   Widget build(BuildContext context) {
     permissionServiceCall();
     return WillPopScope(
       onWillPop: () async {
-        SystemNavigator.pop();
+        _onWillPop();
         return false;
       },
       child: Scaffold(
-        body: Center(
-          child: InkWell(
-              onTap: () {
-                permissionServiceCall();
-              },
-              child:
-                  const Text("Click here to enable Enable Permission Screen")),
-        ),
+        body: (inApprove)
+            ? const LoadingScreen()
+            : Center(
+                child: InkWell(
+                    onTap: () {
+                      permissionServiceCall();
+                    },
+                    child: const Text(
+                        "Click here to enable Enable Permission Screen")),
+              ),
       ),
     );
   }

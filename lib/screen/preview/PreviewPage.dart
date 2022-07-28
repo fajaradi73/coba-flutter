@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_file_view/flutter_file_view.dart';
 import 'package:path/path.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -18,6 +19,7 @@ class _PreviewPageState extends State<PreviewPage> {
   @override
   void initState() {
     super.initState();
+    if (Platform.isAndroid) WebView.platform = AndroidWebView();
   }
 
   @override
@@ -56,11 +58,10 @@ class _PreviewPageState extends State<PreviewPage> {
   }
 
   openDocument(context, File file) {
-    return Container(
-      alignment: Alignment.center,
-      child: const WebView(
-        initialUrl: "https://www.google.com/"
-      ),
+    return LocalFileViewer(
+      filePath: file.path,
+      isBarAnimating: true,
+      intoDownloading: true,
     );
   }
 
@@ -68,7 +69,7 @@ class _PreviewPageState extends State<PreviewPage> {
     var ext = extension(file.path);
     if (ext.contains("pdf")) {
       return openPdf(context, file);
-    } else if (ext.contains("doc")) {
+    } else if (ext.contains("doc") || ext.contains("xls")) {
       return openDocument(context, file);
     } else {
       return openImage(context, file);

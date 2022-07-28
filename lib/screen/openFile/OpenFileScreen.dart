@@ -24,6 +24,7 @@ class OpenFileState extends State<OpenFileScreen>{
 
     // we get the file from result object
     final pathFile = result.files.single;
+    print(pathFile);
     var file = File(pathFile.path!);
     _openFile(file);
   }

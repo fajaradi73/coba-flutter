@@ -1,5 +1,4 @@
 import 'package:coba_flutter/screen/home/model/HomeModel.dart';
-import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -62,9 +61,7 @@ class BasicHomePresenter implements HomePresenter {
     if (latitude != 0 && longitude != 0) {
       List<Placemark> placeMarks =
           await placemarkFromCoordinates(latitude, longitude);
-      if (kDebugMode) {
-        print(placeMarks);
-      }
+
       Placemark place = placeMarks[0];
       return '${place.locality}';
       // return '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';

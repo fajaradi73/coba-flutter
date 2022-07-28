@@ -52,6 +52,7 @@
     <key>NSMicrophoneUsageDescription</key>
     <string>This app needs access to microphone when used</string>
 	<key>NSAppTransportSecurity</key>
+	<key>io.flutter.embedded_views_preview</key><true/>
     <dict>
     <key>NSAllowsArbitraryLoads</key>
     <true/>

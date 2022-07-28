@@ -13,8 +13,8 @@ class LoadingScreen extends StatelessWidget{
         mainAxisAlignment: MainAxisAlignment.center,
         children: const <Widget>[
           SizedBox(
-            height: 50.0,
-            width: 50.0,
+            height: 40.0,
+            width: 40.0,
             child: CircularProgressIndicator(),
           ),
         ],
